@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   CAMILLE HART COMP 272 002
  *
  *   This java file contains the problem solutions for the methods lastBoulder,
  *   showDuplicates, and pair methods. You should utilize the Java Collection
@@ -65,11 +65,23 @@ public class ProblemSolutions {
 
   public static int lastBoulder(int[] boulders) {
 
-      //
-      // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME / SECTION # ABOVE
-      //
-      return -1;
-  }
+      if (boulders == null || boulders.length == 0) return 0;
+        // Max-heap for smashing boulders
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int b : boulders) {
+            pq.add(b);
+        }
+        // Smash until ≤ 1 left
+        while (pq.size() > 1) {
+            int y = pq.poll(); // heaviest
+            int x = pq.poll(); // second heaviest
+            if (x != y) {
+                pq.add(y - x);
+            }
+        }
+
+        return pq.isEmpty() ? 0 : pq.peek();
+    }
 
 
     /**
@@ -90,14 +102,22 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> showDuplicates(ArrayList<String> input) {
-
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure result is sorted in ascending order
-
+         if (input == null || input.size() == 0) return new ArrayList<>();
+        HashMap<String, Integer> countMap = new HashMap<>();
+        // Count occurrences
+        for (String s : input) {
+            countMap.put(s, countMap.getOrDefault(s, 0) + 1);
+        }
+        // Collect duplicates
+        ArrayList<String> result = new ArrayList<>();
+        for (String s : countMap.keySet()) {
+            if (countMap.get(s) > 1) {
+                result.add(s);
+            }
+        }
+        Collections.sort(result); // ascending order required
+        return result;
     }
-
 
     /**
      * Finds pairs in the input array that add up to k.
@@ -131,9 +151,46 @@ public class ProblemSolutions {
 
     public static ArrayList<String> pair(int[] input, int k) {
 
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure returned lists is sorted as indicated above
+        ArrayList<String> result = new ArrayList<>();
+        if (input == null || input.length == 0) return result;
+
+        HashSet<Integer> seen = new HashSet<>();
+        HashSet<String> uniquePairs = new HashSet<>();
+
+        for (int num : input) {
+            int complement = k - num;
+            if (seen.contains(complement)) {
+                // Order within pair: smallest first
+                int a = Math.min(num, complement);
+                int b = Math.max(num, complement);
+
+                uniquePairs.add("(" + a + ", " + b + ")");
+            }
+            seen.add(num);
+        }
+
+        // Convert to list
+        result.addAll(uniquePairs);
+
+        // Sort pairs based on numeric order
+        Collections.sort(result, new Comparator<String>() {
+            public int compare(String p1, String p2) {
+                // Parse "(a, b)"
+                String[] left = p1.replace("(", "").replace(")", "").split(", ");
+                String[] right = p2.replace("(", "").replace(")", "").split(", ");
+
+                int a1 = Integer.parseInt(left[0]);
+                int b1 = Integer.parseInt(left[1]);
+                int a2 = Integer.parseInt(right[0]);
+                int b2 = Integer.parseInt(right[1]);
+
+                // Primary sort by first element
+                if (a1 != a2) return a1 - a2;
+                // Secondary sort by second element
+                return b1 - b2;
+            }
+        });
+
+        return result;
     }
 }
