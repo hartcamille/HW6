@@ -63,9 +63,9 @@ public class ProblemSolutions {
      * returning the 0 if queue is empty else return pq.peek().
      */
 
-  public static int lastBoulder(int[] boulders) {
+    public static int lastBoulder(int[] boulders) {
 
-      if (boulders == null || boulders.length == 0) return 0;
+        if (boulders == null || boulders.length == 0) return 0;
         // Max-heap for smashing boulders
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
         for (int b : boulders) {
@@ -75,13 +75,13 @@ public class ProblemSolutions {
         while (pq.size() > 1) {
             int y = pq.poll(); // heaviest
             int x = pq.poll(); // second heaviest
-            if (x != y) {
+            if (x != y) { //if unequal, leftover goes back in
                 pq.add(y - x);
             }
         }
 
-        return pq.isEmpty() ? 0 : pq.peek();
-    }
+        return pq.isEmpty() ? 0 : pq.peek(); //if nothing left: 0
+    }                                           //else return remaining piece
 
 
     /**
@@ -102,7 +102,7 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> showDuplicates(ArrayList<String> input) {
-         if (input == null || input.size() == 0) return new ArrayList<>();
+        if (input == null || input.size() == 0) return new ArrayList<>();
         HashMap<String, Integer> countMap = new HashMap<>();
         // Count occurrences
         for (String s : input) {
@@ -110,7 +110,7 @@ public class ProblemSolutions {
         }
         // Collect duplicates
         ArrayList<String> result = new ArrayList<>();
-        for (String s : countMap.keySet()) {
+        for (String s : countMap.keySet()) { //pick out only strings that appear >1
             if (countMap.get(s) > 1) {
                 result.add(s);
             }
@@ -159,23 +159,23 @@ public class ProblemSolutions {
 
         for (int num : input) {
             int complement = k - num;
-            if (seen.contains(complement)) {
-                // Order within pair: smallest first
+            if (seen.contains(complement)) { //if seen before, form pair
+                // Order within pair: (smallest first, then big)
                 int a = Math.min(num, complement);
                 int b = Math.max(num, complement);
 
                 uniquePairs.add("(" + a + ", " + b + ")");
             }
-            seen.add(num);
+            seen.add(num); //mark as seen
         }
 
-        // Convert to list
+        // Convert to Arraylist
         result.addAll(uniquePairs);
 
         // Sort pairs based on numeric order
         Collections.sort(result, new Comparator<String>() {
             public int compare(String p1, String p2) {
-                // Parse "(a, b)"
+                // format (a,b)
                 String[] left = p1.replace("(", "").replace(")", "").split(", ");
                 String[] right = p2.replace("(", "").replace(")", "").split(", ");
 
@@ -184,9 +184,9 @@ public class ProblemSolutions {
                 int a2 = Integer.parseInt(right[0]);
                 int b2 = Integer.parseInt(right[1]);
 
-                // Primary sort by first element
+                // compare first number
                 if (a1 != a2) return a1 - a2;
-                // Secondary sort by second element
+                // compare second number
                 return b1 - b2;
             }
         });
