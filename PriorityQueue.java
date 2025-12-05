@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   CAMILLE HART COMP 272 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -151,8 +151,14 @@ class PriorityQueue<E, P> {
 
     public Node add(E e, P priority) {
 
-        // YOUR CODE GOES HERE
-        return null;
+         // Create  new node at the end of the array (right-most leaf)
+        Node newNode = new Node(e, priority, tree.size());
+        tree.add(newNode);
+
+        // Restore heap order by bubbling it up
+        pullUp(newNode.idx);
+
+        return newNode;
     }
 
 
@@ -168,7 +174,11 @@ class PriorityQueue<E, P> {
 
     public boolean contains(E e) {
 
-        // ADD YOUR CODE HERE
+       for (Node node : tree) {
+            if (node.value.equals(e)) {
+                return true;
+            }
+        }
         return false;
     }
 
